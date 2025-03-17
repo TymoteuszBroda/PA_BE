@@ -27,8 +27,16 @@ namespace PermAdminAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Employee> AddEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
         {
+            if (employee == null)
+            {
+                return BadRequest("Employee data is required.");
+            }
+
+            context.Employees.Add(employee);
+            await context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.id }, employee);
         }
     }
