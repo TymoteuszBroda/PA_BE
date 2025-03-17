@@ -1,29 +1,34 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using PermAdminAPI.Data;
 using PermAdminAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace PermAdminAPI.Controllers;
-
-public class UsersController(DataContext context) : BaseApiController
+namespace PermAdminAPI.Controllers
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+    public class UsersController : BaseApiController
     {
-        var users = await context.Users.ToListAsync();
-        return Ok(users);
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<AppUser>> GetUser(int id)
-    {
-        if (User == null)
+        private readonly DataContext _context;
+        public UsersController(DataContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        var user = await context.Users.FindAsync(id);
-        return Ok(user);
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AppUser>> GetUser(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
     }
 }

@@ -1,13 +1,17 @@
-using System;
 using PermAdminAPI.Models;
-
 using Microsoft.EntityFrameworkCore;
 
-namespace PermAdminAPI.Data;
-
-public class DataContext(DbContextOptions options) : DbContext(options)
+namespace PermAdminAPI.Data
 {
-    public DbSet<AppUser> Users { get; set; }
-    public DbSet<Employee> Employees {get; set;}
-    public DbSet<Licence> Licences {get; set;}
+    public class DataContext : DbContext
+    {
+        public DataContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        public DbSet<AppUser> Users { get; set; }
+        public DbSet<Employee> Employees {get; set;}
+        public DbSet<Licence> Licences {get; set;}
+    }
 }
+

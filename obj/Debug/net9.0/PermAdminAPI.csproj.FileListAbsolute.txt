@@ -152,3 +152,11 @@
 /home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/home/tbroda/Desktop/PermAdminAPI/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll

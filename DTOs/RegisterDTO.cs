@@ -8,5 +8,5 @@ public class RegisterDTO
     [Required]
     public required string Username { get; set; }
     [Required]
-    public required string password {get; set;  }
+    public required string Password {get; set;  }
 }

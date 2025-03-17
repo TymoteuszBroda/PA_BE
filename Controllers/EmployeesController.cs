@@ -14,5 +14,22 @@ namespace PermAdminAPI.Controllers
             var employees = await context.Employees.ToListAsync();
             return Ok(employees);
         }
+    
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Employee>> GetEmployeeById(int id)
+        {
+            var employee = await context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return Ok(employee);
+        }
+
+        [HttpPost]
+        public ActionResult<Employee> AddEmployee(Employee employee)
+        {
+            return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.id }, employee);
+        }
     }
 }
