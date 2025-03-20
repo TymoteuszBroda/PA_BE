@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/tbroda/Desktop/PermAdminAPI/PermAdminAPI.csproj": {}
+    "/home/tbroda/Desktop/praca/PermAdminAPI/PermAdminAPI.csproj": {}
   },
   "projects": {
-    "/home/tbroda/Desktop/PermAdminAPI/PermAdminAPI.csproj": {
+    "/home/tbroda/Desktop/praca/PermAdminAPI/PermAdminAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/tbroda/Desktop/PermAdminAPI/PermAdminAPI.csproj",
+        "projectUniqueName": "/home/tbroda/Desktop/praca/PermAdminAPI/PermAdminAPI.csproj",
         "projectName": "PermAdminAPI",
-        "projectPath": "/home/tbroda/Desktop/PermAdminAPI/PermAdminAPI.csproj",
+        "projectPath": "/home/tbroda/Desktop/praca/PermAdminAPI/PermAdminAPI.csproj",
         "packagesPath": "/home/tbroda/.nuget/packages/",
-        "outputPath": "/home/tbroda/Desktop/PermAdminAPI/obj/",
+        "outputPath": "/home/tbroda/Desktop/praca/PermAdminAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/tbroda/.nuget/NuGet/NuGet.Config"
