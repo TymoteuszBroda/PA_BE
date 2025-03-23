@@ -83,7 +83,7 @@ namespace PermAdminAPI.Controllers
                     Id = el.id,
                     EmployeeId = el.employeeId,
                     LicenceId = el.licenceId,
-                    EmployeeName = el.Employee.FirstName,
+                    EmployeeName = $"{el.Employee.FirstName} {el.Employee.LastName}",
                     LicenceName = el.Licence.ApplicationName
                 })
                 .ToListAsync();
@@ -104,7 +104,9 @@ namespace PermAdminAPI.Controllers
             var dto = new AssignLicenceDTO
             {
                 Id = employeeLicence.id,
-                EmployeeName = employeeLicence.Employee.FirstName+employeeLicence.Employee.LastName,
+                EmployeeId = employeeLicence.employeeId,
+                LicenceId = employeeLicence.licenceId,
+                EmployeeName = employeeLicence.Employee.FirstName+" "+employeeLicence.Employee.LastName,
                 LicenceName = employeeLicence.Licence.ApplicationName
             };
 
@@ -112,16 +114,32 @@ namespace PermAdminAPI.Controllers
         }
 
         [HttpPost("assign-licence")]
-        public async Task<IActionResult> AssignLicence([FromBody]AssignLicenceDTO request)
+        public async Task<ActionResult<AssignLicenceDTO>> AssignLicence([FromBody] AssignLicenceDTO request)
         {
-            var licence = await context.Licences.FindAsync(request.LicenceId);
+            var existingAssignment = await context.EmployeeLicences
+                .AnyAsync(el => el.employeeId == request.EmployeeId 
+                            && el.licenceId == request.LicenceId);
 
-            if (licence == null || licence.Quantity <= 0)
+            if (existingAssignment)
             {
-                return BadRequest("License not available");
+                return BadRequest("This licence is already assigned to the employee");
             }
 
-            var employee = await context.Employees.FindAsync(request.EmployeeId);
+            var licence = await context.Licences
+                .FirstOrDefaultAsync(l => l.id == request.LicenceId);
+
+            if (licence == null)
+            {
+                return NotFound("Licence not found");
+            }
+
+            if (licence.Quantity <= 0)
+            {
+                return BadRequest("Licence quantity exhausted");
+            }
+            var employee = await context.Employees
+                .FirstOrDefaultAsync(e => e.id == request.EmployeeId);
+
             if (employee == null)
             {
                 return NotFound("Employee not found");
@@ -134,11 +152,18 @@ namespace PermAdminAPI.Controllers
             };
 
             context.EmployeeLicences.Add(employeeLicence);
-
             licence.Quantity--;
-
+            
             await context.SaveChangesAsync();
-            return Ok("License assigned successfully");
+
+            return Ok(new AssignLicenceDTO
+            {
+                Id = employeeLicence.id,
+                EmployeeId = employeeLicence.employeeId,
+                LicenceId = employeeLicence.licenceId,
+                EmployeeName = $"{employee.FirstName} {employee.LastName}",
+                LicenceName = licence.ApplicationName
+            });
         }
 
         private bool LicenceExists(int id)
