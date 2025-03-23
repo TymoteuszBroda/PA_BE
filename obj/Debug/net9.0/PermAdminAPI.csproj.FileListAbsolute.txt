@@ -322,3 +322,4 @@
 /home/tbroda/Desktop/praca/PermAdminAPI/obj/Debug/net9.0/PermAdminAPI.pdb
 /home/tbroda/Desktop/praca/PermAdminAPI/obj/Debug/net9.0/PermAdminAPI.genruntimeconfig.cache
 /home/tbroda/Desktop/praca/PermAdminAPI/obj/Debug/net9.0/ref/PermAdminAPI.dll
+/home/tbroda/Desktop/praca/PermAdminAPI/obj/Debug/net9.0/PermAdminAPI.sourcelink.json

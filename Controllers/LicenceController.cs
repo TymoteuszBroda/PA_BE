@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PermAdminAPI.Data;
+using PermAdminAPI.DTOs;
 using PermAdminAPI.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -69,6 +70,75 @@ namespace PermAdminAPI.Controllers
             await context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("assigned-licences")]
+        public async Task<ActionResult<IEnumerable<AssignLicenceDTO>>> GetAssignedLicences()
+        {
+            var assignedLicences = await context.EmployeeLicences
+                .Include(el => el.Employee)
+                .Include(el => el.Licence)
+                .Select(el => new AssignLicenceDTO 
+                {
+                    Id = el.id,
+                    EmployeeId = el.employeeId,
+                    LicenceId = el.licenceId,
+                    EmployeeName = el.Employee.FirstName,
+                    LicenceName = el.Licence.ApplicationName
+                })
+                .ToListAsync();
+            
+            return Ok(assignedLicences);
+        }
+
+        [HttpGet("assigned-licences/{id}")]
+        public async Task<ActionResult<AssignLicenceDTO>> GetAssignedLicence(int id)
+        {
+            var employeeLicence = await context.EmployeeLicences
+                .Include(el => el.Employee)
+                .Include(el => el.Licence)
+                .FirstOrDefaultAsync(el => el.id == id);
+
+            if (employeeLicence == null) return NotFound();
+
+            var dto = new AssignLicenceDTO
+            {
+                Id = employeeLicence.id,
+                EmployeeName = employeeLicence.Employee.FirstName+employeeLicence.Employee.LastName,
+                LicenceName = employeeLicence.Licence.ApplicationName
+            };
+
+            return Ok(dto);
+        }
+
+        [HttpPost("assign-licence")]
+        public async Task<IActionResult> AssignLicence([FromBody]AssignLicenceDTO request)
+        {
+            var licence = await context.Licences.FindAsync(request.LicenceId);
+
+            if (licence == null || licence.Quantity <= 0)
+            {
+                return BadRequest("License not available");
+            }
+
+            var employee = await context.Employees.FindAsync(request.EmployeeId);
+            if (employee == null)
+            {
+                return NotFound("Employee not found");
+            }
+
+            var employeeLicence = new EmployeeLicence
+            {
+                employeeId = request.EmployeeId,
+                licenceId = request.LicenceId
+            };
+
+            context.EmployeeLicences.Add(employeeLicence);
+
+            licence.Quantity--;
+
+            await context.SaveChangesAsync();
+            return Ok("License assigned successfully");
         }
 
         private bool LicenceExists(int id)
