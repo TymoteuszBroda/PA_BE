@@ -166,6 +166,26 @@ namespace PermAdminAPI.Controllers
             });
         }
 
+        [HttpGet("assigned-licences/employee/{employeeId}")]
+        public async Task<ActionResult<IEnumerable<AssignLicenceDTO>>> GetAssignedLicencesByEmployee(int employeeId)
+        {
+            var assignedLicences = await context.EmployeeLicences
+                .Where(el => el.employeeId == employeeId)
+                .Include(el => el.Employee)
+                .Include(el => el.Licence)
+                .Select(el => new AssignLicenceDTO 
+                {
+                    Id = el.id,
+                    EmployeeId = el.employeeId,
+                    LicenceId = el.licenceId,
+                    EmployeeName = $"{el.Employee.FirstName} {el.Employee.LastName}",
+                    LicenceName = el.Licence.ApplicationName
+                })
+                .ToListAsync();
+            
+            return Ok(assignedLicences);
+        }
+
         private bool LicenceExists(int id)
         {
             return context.Licences.Any(e => e.id == id);

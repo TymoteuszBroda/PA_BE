@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PermAdminAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8468a24baa5fe854b529bb64437ab55567967f58")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12c739da0a460777bb3f736333a33565d23ad123")]
 [assembly: System.Reflection.AssemblyProductAttribute("PermAdminAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PermAdminAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
