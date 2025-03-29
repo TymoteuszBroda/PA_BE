@@ -186,6 +186,24 @@ namespace PermAdminAPI.Controllers
             return Ok(assignedLicences);
         }
 
+        [HttpDelete("assigned-licences/{id}")]
+        public async Task<IActionResult> DeleteAssignedLicence(int id)
+        {
+            var employeeLicence = await context.EmployeeLicences.FindAsync(id);
+            if (employeeLicence == null) return NotFound();
+
+            var licence = await context.Licences.FindAsync(employeeLicence.licenceId);
+            if (licence != null)
+            {
+                licence.Quantity++;
+            }
+
+            context.EmployeeLicences.Remove(employeeLicence);
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool LicenceExists(int id)
         {
             return context.Licences.Any(e => e.id == id);
