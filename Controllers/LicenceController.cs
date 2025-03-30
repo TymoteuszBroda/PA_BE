@@ -32,8 +32,35 @@ namespace PermAdminAPI.Controllers
         {
             context.Licences.Add(licence);
             await context.SaveChangesAsync();
+
+            for (int i = 0; i < licence.Quantity; i++)
+            {
+                var licenceInstance = new LicenceInstance
+                {
+                    LicenceId = licence.id,
+                    ValidTo = licence.ValidTo
+                };
+                context.LicenceInstances.Add(licenceInstance);
+            }
+            await context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetLicence), new { id = licence.id }, licence);
         }
+
+        [HttpGet("{id}/instances")]
+        public async Task<ActionResult<IEnumerable<LicenceInstance>>> GetLicenceInstances(int id)
+        {
+            var instances = await context.LicenceInstances
+            .Where(li => li.LicenceId == id)
+            .ToListAsync();
+            if (!instances.Any())
+            {
+                return NotFound();
+            }
+            return Ok(instances);
+        }
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLicence(int id, Licence licence)
