@@ -28,24 +28,46 @@ namespace PermAdminAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Licence>> CreateLicence(Licence licence)
+public async Task<ActionResult<Licence>> CreateLicence(Licence licence)
+{
+    var existingLicence = await context.Licences
+        .FirstOrDefaultAsync(l => l.ApplicationName == licence.ApplicationName);
+
+    if (existingLicence != null)
+    {
+        existingLicence.Quantity += licence.Quantity;
+        existingLicence.ValidTo = licence.ValidTo;
+
+        for (int i = 0; i < licence.Quantity; i++)
         {
-            context.Licences.Add(licence);
-            await context.SaveChangesAsync();
-
-            for (int i = 0; i < licence.Quantity; i++)
+            context.LicenceInstances.Add(new LicenceInstance
             {
-                var licenceInstance = new LicenceInstance
-                {
-                    LicenceId = licence.id,
-                    ValidTo = licence.ValidTo
-                };
-                context.LicenceInstances.Add(licenceInstance);
-            }
-            await context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetLicence), new { id = licence.id }, licence);
+                LicenceId = existingLicence.id,
+                ValidTo = existingLicence.ValidTo
+            });
         }
+        
+        await context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetLicence), new { id = existingLicence.id }, existingLicence);
+    }
+    else
+    {
+        context.Licences.Add(licence);
+        await context.SaveChangesAsync();
+
+        for (int i = 0; i < licence.Quantity; i++)
+        {
+            context.LicenceInstances.Add(new LicenceInstance
+            {
+                LicenceId = licence.id,
+                ValidTo = licence.ValidTo
+            });
+        }
+        
+        await context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetLicence), new { id = licence.id }, licence);
+    }
+}
 
         [HttpGet("{id}/instances")]
         public async Task<ActionResult<IEnumerable<LicenceInstance>>> GetLicenceInstances(int id)
