@@ -13,6 +13,7 @@ namespace PermAdminAPI.Data
         public DbSet<Employee> Employees {get; set;}
         public DbSet<Licence> Licences {get; set;}
         public DbSet<EmployeeLicence> EmployeeLicences {get; set;}
+        public DbSet<LicenceInstance> LicenceInstances {get; set;}
     }
 }
 

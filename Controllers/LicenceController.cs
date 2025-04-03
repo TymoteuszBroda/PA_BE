@@ -28,12 +28,61 @@ namespace PermAdminAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Licence>> CreateLicence(Licence licence)
+public async Task<ActionResult<Licence>> CreateLicence(Licence licence)
+{
+    var existingLicence = await context.Licences
+        .FirstOrDefaultAsync(l => l.ApplicationName == licence.ApplicationName);
+
+    if (existingLicence != null)
+    {
+        existingLicence.Quantity += licence.Quantity;
+        existingLicence.ValidTo = licence.ValidTo;
+
+        for (int i = 0; i < licence.Quantity; i++)
         {
-            context.Licences.Add(licence);
-            await context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetLicence), new { id = licence.id }, licence);
+            context.LicenceInstances.Add(new LicenceInstance
+            {
+                LicenceId = existingLicence.id,
+                ValidTo = existingLicence.ValidTo
+            });
         }
+        
+        await context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetLicence), new { id = existingLicence.id }, existingLicence);
+    }
+    else
+    {
+        context.Licences.Add(licence);
+        await context.SaveChangesAsync();
+
+        for (int i = 0; i < licence.Quantity; i++)
+        {
+            context.LicenceInstances.Add(new LicenceInstance
+            {
+                LicenceId = licence.id,
+                ValidTo = licence.ValidTo
+            });
+        }
+        
+        await context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetLicence), new { id = licence.id }, licence);
+    }
+}
+
+        [HttpGet("{id}/instances")]
+        public async Task<ActionResult<IEnumerable<LicenceInstance>>> GetLicenceInstances(int id)
+        {
+            var instances = await context.LicenceInstances
+            .Where(li => li.LicenceId == id)
+            .ToListAsync();
+            if (!instances.Any())
+            {
+                return NotFound();
+            }
+            return Ok(instances);
+        }
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLicence(int id, Licence licence)
